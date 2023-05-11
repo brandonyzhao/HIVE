@@ -1,0 +1,46 @@
+====================PROTOPOOL========================
+python launch_hits.py \
+--html_template=hit_templates/combined_protopool_agreement.html \
+--hit_properties_file=hit_properties/properties_5.json \
+--input_json_file=examples/input_protopool_agreement.txt \
+--hit_ids_file=examples/protopool_ids_5.txt
+
+python get_results.py \
+  --hit_ids_file=examples/protopool_ids_5.txt \
+  > results/protopool_test_results.txt
+
+===================POOLCAP===========================
+
+python launch_hits.py \
+--html_template=hit_templates/combined_poolcap_agreement.html \
+--hit_properties_file=hit_properties/properties_5.json \
+--input_json_file=examples/input_poolcap_agreement.txt \
+--hit_ids_file=examples/poolcap_ids_5.txt
+
+python get_results.py \
+  --hit_ids_file=examples/poolcap_ids_5.txt \
+  > results/poolcap_test_results.txt
+
+===================PROTOPNET=========================
+
+python launch_hits.py \
+--html_template=hit_templates/combined_protopnet_distinction_mod.html \
+--hit_properties_file=hit_properties/properties_5.json \
+--input_json_file=examples/input_protopnet_distinction_mod.txt \
+--hit_ids_file=examples/protopnet_ids_5.txt
+
+python get_results.py \
+  --hit_ids_file=examples/protopnet_ids_5.txt \
+  > results/protopnet_test_results.txt
+
+====================PROTOPCAP========================
+
+python launch_hits.py \
+--html_template=hit_templates/combined_protopcap_distinction_mod.html \
+--hit_properties_file=hit_properties/properties_5.json \
+--input_json_file=examples/input_protopcap_distinction_mod.txt \
+--hit_ids_file=examples/protopcap_ids_5.txt
+
+python get_results.py \
+  --hit_ids_file=examples/protopcap_ids_5.txt \
+  > results/protopcap_test_results.txt

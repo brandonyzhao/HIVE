@@ -176,7 +176,7 @@
           <b>Please carefully read this page as the remaining study depends on your understanding of the model.</b>
         </p>
         <br>
-        {% include "hit_templates/intro_protopnet.html" %}
+        {% include "hit_templates/intro_protopcap.html" %}
         <br>
         <div class='col-xs-12' id='button-div'>
           <button class='btn btn-lg btn-primary' id="next_intro2preview" onclick="pg_intro2preview()">Next Page</button>
@@ -199,17 +199,16 @@
         <div class='col-xs-8' style="border:1px solid black;">
           <h1>Predict the bird species</h1>
           <p>
-            Given a bird photo, the ProtoPNet model predicts the species based on prototypes it has learned from
+            Given a bird photo, the ProtoPCap model predicts the species based on prototypes it has learned from
             previously seen photos.
             Specifically for each prototype, the model identifies a region in the
             photo that looks the most similar to the prototype and rates their similarity.
           </p>
           <p>
             <b>
-              For a given photo, we show explanations of how the model reasons for 4 bird species.
+              For a given photo, we show explanations of how the model reasons for 2 bird species.
               For each bird species, rate how similar each prototype is
               to the photo region.
-              Note that the (region, prototype) pairs are presented in random order.
               At the end, choose the bird species you think is correct.
             </b>
           </p>
@@ -238,7 +237,7 @@
           Please examine them and rate your level of understanding of the model.
         </p>
       </div>
-      <div class='container-fluid'>
+    <!-- <div class='container-fluid'>
         <div class='col-xs-4'>
           <h3>Correct prediction</h3>
           <div id='correct1-container'></div>
@@ -248,6 +247,16 @@
           <h3>Incorrect prediction</h3>
           <div id='incorrect-container'></div>
         </div>
+    </div> -->
+
+    <div class='container-fluid'>
+        <h3>Correct prediction</h3>
+        <div class='col-xs-6' id='correct1-container'></div>
+    </div>
+    <br><br>
+    <div class='container-fluid'>
+      <h3>Incorrect prediction</h3>
+      <div class='col-xs-6' id='incorrect-container'></div>
       </div>
 
       <br><br><br>
@@ -276,7 +285,7 @@
 
 
     <!-- Main task -->
-    {% include "hit_templates/task_protopnet_distinction.html" %}
+    {% include "hit_templates/task_protopcap_distinction_mod.html" %}
 
 
     <!-- Post-task evaluation -->
@@ -308,7 +317,7 @@
           You identified correct predictions for
           <b><span id="correctcount"></span> out of <span id="correcttotal"></span></b>
           photos in the previous task, achieving <b><span id="correctacc"></span>%</b> accuracy.
-          (Random guessing will result in 25% accuracy.)
+          (Random guessing will result in 50% accuracy.)
         </p>
         <br>
         <h3>Q. How well do you think you understand the model's reasoning process?</h3>
@@ -500,8 +509,8 @@
         return accumulator + a;
       }
 
-      var DEFAULT_INPUT = {"ID": 0, "correct1": ["https://drive.google.com/uc?export=view&id=1FYOijN1EaZ-Kj1IgsQwk0CthM0YvPW_d"],"correct2":["https://drive.google.com/uc?export=view&id=1Kau4JOvHuP5hNfUX4e0rR8eG5rgIwJTj"],"incorrect": ["https://drive.google.com/uc?export=view&id=1znfYvfz7aY09HvKa4yI4npvpplLL7QZD"], "sim": [{"testimg": "https://drive.google.com/uc?export=view&id=1O7KPCA5U7LGppVUfCPJ2OfQ7xFBuc0gO","top1": "https://drive.google.com/uc?export=view&id=1eAe6GuoO6Z71m46G99kA6L9qLsanEnr8", "top2": "https://drive.google.com/uc?export=view&id=1Hn6qjTwBL8Kz27MxigKeatXyKjh_PWn9", "top3": "https://drive.google.com/uc?export=view&id=1LaMrRcistoDQlV32PQuAZKGicROa_7Ej", "top4": "https://drive.google.com/uc?export=view&id=1-OrL6O2_yv-TGV30fWQdpAa1nJvyi4-k",  "ground_truth": 1,"class1_shuffle": [ 2, 5, 6, 8, 3, 4, 10, 9, 7, 1], "class2_shuffle": [ 3,  7, 10,  5,  6,  1,  8,  9,  2,  4], "class3_shuffle": [1, 3, 6, 7, 4, 5, 2], "class4_shuffle": [6, 5, 4, 2, 3, 7, 1]},{"testimg": "https://drive.google.com/uc?export=view&id=1chB_VQGC6HJg3DZz3iga1oN3VTT2QT3r", "top1": "https://drive.google.com/uc?export=view&id=1MXFaIZimnN2TYT6uAhHAQg6itDoJDrAB", "top2": "https://drive.google.com/uc?export=view&id=18YJfPgjYON3dVawcQKQ57VjLRfdc-uJ4", "top3": "https://drive.google.com/uc?export=view&id=1smswOXa4LaEf-qcWfyvbCR0omzwPUVoz", "top4": "https://drive.google.com/uc?export=view&id=1NRRLAx_UEQrO43YeKaFNYa_1el7d0Ce7",  "ground_truth": 2,"class2_shuffle": [2, 1, 5, 4, 3], "class1_shuffle": [5, 6, 2, 4, 7, 1, 8 ,3], "class3_shuffle": [1 , 5 , 8 , 3 , 4 , 6 , 9 , 7 , 2 ,10], "class4_shuffle": [ 5,  3 , 2 , 6, 10,  7 , 4 , 1,  8 , 9]}, {"testimg": "https://drive.google.com/uc?export=view&id=1tu6TBPgBMOqBW7MWJ1lC9sp9C0Rmq5eQ", "top1": "https://drive.google.com/uc?export=view&id=1iPjvO0iaA5Vr0y-y-dYIomEkg-8EXKAQ","top2": "https://drive.google.com/uc?export=view&id=1-EcDW3EuAfS2ZZyrPt0HdPc684JaVFFn", "top3": "https://drive.google.com/uc?export=view&id=1rMgBBPQwhGC4IJjoh75mEyTpJ2lqCsYf", "top4": "https://drive.google.com/uc?export=view&id=12jlCS24w778SlIca9mcsjScQx56wrpP8", "ground_truth": 3, "class3_shuffle": [9, 3, 6, 1, 5, 4, 8, 7, 2], "class2_shuffle": [3, 7, 6, 2, 4, 5, 1], "class1_shuffle": [ 4, 9, 1, 6, 2, 3, 7, 5,10, 8], "class4_shuffle": [6, 2, 5, 1, 3, 7, 4]}, {"testimg": "https://drive.google.com/uc?export=view&id=1hbwVtTI6WDK2wxevLJDeIcqGv91Y9Xj-","top1": "https://drive.google.com/uc?export=view&id=1t85eN-RpQz0C5udbkz14edGoQDKMuWDT", "top2": "https://drive.google.com/uc?export=view&id=1FOL88dcnSxj5Ty5nRyfTQJupbsfDBvpy", "top3": "https://drive.google.com/uc?export=view&id=1tfT8FqAF9IpaoGNiwZwW0Eq6OIBgDGIn", "top4": "https://drive.google.com/uc?export=view&id=1AbvCF82LjpoNOj7_k7BYZmX5Sm7RvEJH", "ground_truth": 1, "class1_shuffle": [5, 1, 3, 2, 4], "class2_shuffle": [7, 4, 2, 5, 3, 6, 1], "class3_shuffle": [ 9,  5,  1,  3,  4,  2, 10,  8,  7,  6], "class4_shuffle": [9, 8, 5, 6, 3, 4, 2, 7, 1]}]}
-      // Variables to record answers
+      var DEFAULT_INPUT = {'ID': 0, 'correct1': ['https://drive.google.com/uc?export=view&id=1rqD19XQZIQqOp24kQ_kokoF-bFzJzBbO'], 'correct2': ['https://drive.google.com/uc?export=view&id=1rqD19XQZIQqOp24kQ_kokoF-bFzJzBbO'], 'incorrect': ['https://drive.google.com/uc?export=view&id=1wxnkwkVsq6zfJnA1S2nbrEUUjvwpZyXa'], 'sim': [{'testimg': 'https://drive.google.com/uc?export=view&id=1AwqxBTcBBlgTXpL3xWld-ICxnnXmCIy9', 'top2': 'https://drive.google.com/uc?export=view&id=1XIcLxW7HnbI1d0hxROsSLp9Hvm34LqUq', 'top1': 'https://drive.google.com/uc?export=view&id=1QDw9RQYg-4X_Z8DHXWOWxf483yesqoKL', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1BzvOlVzr5J_cub6_k2MErOaMRjBSGUG7', 'top2': 'https://drive.google.com/uc?export=view&id=1PRra9gnT4j7WcsGiZeBNvfYB3ID0beWX', 'top1': 'https://drive.google.com/uc?export=view&id=1GG-pQZ0Dalhd7EaOEOlrqVW17DhIN4v4', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1DbzO6VqKMxR96d-NcomWP1nplWyeAXr7', 'top1': 'https://drive.google.com/uc?export=view&id=1BMy2hVmVrRJnBufjbv700oCqTv8HLoWN', 'top2': 'https://drive.google.com/uc?export=view&id=1MXcXdc9ql2s435DOjsbUYsZDRihjC3dh', 'top3': '', 'top4': '', 'ground_truth': 1, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=19dpu_CjC6wMgc90zEPQhCMaunyzfKwvw', 'top2': 'https://drive.google.com/uc?export=view&id=1xBrRcMstIucQfd3tlmQpsNCUJEvERfX0', 'top1': 'https://drive.google.com/uc?export=view&id=1AW9F1r_36aPWG_EG_8y5ijBqThv-j4VN', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1MjbjnpNrfsvNetXm0VTIU7eaij8UNogw', 'top2': 'https://drive.google.com/uc?export=view&id=1cNiexJ-FjOjI0EJ10FqYULV53IASLjhK', 'top1': 'https://drive.google.com/uc?export=view&id=1QDWArx9Ne7F1M3hPT1tR6fNRSyFEa2wE', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1nwC5V_gpL4u-lTj-RCY96EaBezxoI9Ox', 'top2': 'https://drive.google.com/uc?export=view&id=1o192wYirwF6dy-myiiuMutRAzbAKw-0P', 'top1': 'https://drive.google.com/uc?export=view&id=1DdCzcd8qWoFOcj6BBfXV36MwD9xMZtZd', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=10TdudaGmyRaNbHh-aX_CtKxwQF4oJGWi', 'top2': 'https://drive.google.com/uc?export=view&id=1dUKnkgNESmJmD-YzMAol-80WWLC_1piG', 'top1': 'https://drive.google.com/uc?export=view&id=1aO2w5vQzWINB0AuGlur2vkprSqxx11tv', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1KucVW3C8mt68ISA85lfDsZfm6pWmWDy9', 'top2': 'https://drive.google.com/uc?export=view&id=1-q6kR7cS5WJTNDzL5QXT2S-b_dxlnp4K', 'top1': 'https://drive.google.com/uc?export=view&id=1WjkI3-eFyD6uhRLN_bQcqVsgfXM6YSLN', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1FiQScFsGADke1MPSbPm2I2N2ggSpZ5Zj', 'top2': 'https://drive.google.com/uc?export=view&id=1C9NKpYfjMtj1aLshCYFN8lV9jmjTzgEu', 'top1': 'https://drive.google.com/uc?export=view&id=1uFfbIqYA3PCLVALnJdQQwyBdaezZC7zK', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1YCqIgoF5uE2jl3zkEiY9Pvp9TGpRDtIG', 'top1': 'https://drive.google.com/uc?export=view&id=1D3BNarXmpeOxq9tAkXR2jREsl6Vi8CZt', 'top2': 'https://drive.google.com/uc?export=view&id=1l4V5cJUY1WEk6W9iyB6ah557Wil83ROl', 'top3': '', 'top4': '', 'ground_truth': 1, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}]}
+
       var answers = [];
       var descriptions = [];
       var feedback = [];
@@ -515,13 +524,9 @@
 
       var checked_radiobtns_class1 = new Array(10).fill(0);;
       var checked_radiobtns_class2 = new Array(10).fill(0);;
-      var checked_radiobtns_class3 = new Array(10).fill(0);;
-      var checked_radiobtns_class4 = new Array(10).fill(0);;
 
       var class1_shuffle_length;
-      var  class2_shuffle_length;
-      var  class3_shuffle_length;
-      var  class4_shuffle_length;
+      var class2_shuffle_length;
 
 
       var origacc = 79.9;
@@ -533,21 +538,15 @@
       function radiobtn_check() {
         console.log("class1_shuffle_length: "+ class1_shuffle_length)
         console.log("class2_shuffle_length: "+ class2_shuffle_length)
-        console.log("class3_shuffle_length: "+ class3_shuffle_length)
-        console.log("class4_shuffle_length: "+ class4_shuffle_length)
 
         console.log("checked_radiobtns_class1: "+checked_radiobtns_class1)
         console.log("checked_radiobtns_class2: "+checked_radiobtns_class2)
-        console.log("checked_radiobtns_class3: "+checked_radiobtns_class3)
-        console.log("checked_radiobtns_class4: "+checked_radiobtns_class4)
-        return (($("input[name='sim']").is(":checked")) && $("input[name='confidence_task']").is(":checked")  && (checked_radiobtns_class1.reduce(add, 0)==class1_shuffle_length)&&(checked_radiobtns_class2.reduce(add, 0)==class2_shuffle_length) && (checked_radiobtns_class3.reduce(add,0)==class3_shuffle_length) && (checked_radiobtns_class4.reduce(add,0)==class4_shuffle_length))
+        return (($("input[name='sim']").is(":checked")) && $("input[name='confidence_task']").is(":checked")  && (checked_radiobtns_class1.reduce(add, 0)==class1_shuffle_length)&&(checked_radiobtns_class2.reduce(add, 0)==class2_shuffle_length))
       }
 
       function record() {
         checked_radiobtns_class1 = new Array(10).fill(0);;
         checked_radiobtns_class2 = new Array(10).fill(0);;
-        checked_radiobtns_class3 = new Array(10).fill(0);;
-        checked_radiobtns_class4 = new Array(10).fill(0);;
 
         timing['nextphoto'][idx] = Date.now();
 
@@ -557,19 +556,13 @@
 
         $('#class1').show();
         $('#class2').hide();
-        $('#class3').hide();
-        $('#class4').hide();
         $('#class1tab').addClass('active');
         $('#class2tab').removeClass('active');
-        $('#class3tab').removeClass('active');
-        $('#class4tab').removeClass('active');
         $('input[name=sim]').attr('checked',false); // does this reset the radio buttons?!
 
         // store the checked items
         class1_selection = []
         class2_selection = []
-        class3_selection = []
-        class4_selection = []
 
         $('#checkboxes_distinction_class1 input:checked').each(function() {
           class1_selection.push($(this).attr('value'));
@@ -579,29 +572,15 @@
           class2_selection.push($(this).attr('value'));
         });
 
-        $('#checkboxes_distinction_class3 input:checked').each(function() {
-          class3_selection.push($(this).attr('value'));
-        });
-
-        $('#checkboxes_distinction_class4 input:checked').each(function() {
-          class4_selection.push($(this).attr('value'));
-        });
-
         console.log("class1_selection: "+class1_selection);
         console.log("class2_selection: "+class2_selection);
-        console.log("class3_selection: "+class3_selection);
-        console.log("class4_selection: "+class4_selection);
 
         // UNSHUFFLE THE PROTOTYPES
         class1_selection_unshuffled = JSON.parse(JSON.stringify(class1_selection));
         class2_selection_unshuffled = JSON.parse(JSON.stringify(class2_selection));
-        class3_selection_unshuffled = JSON.parse(JSON.stringify(class3_selection));
-        class4_selection_unshuffled = JSON.parse(JSON.stringify(class4_selection));
 
         class1_shuffle = sim[idx].class1_shuffle;
         class2_shuffle = sim[idx].class2_shuffle;
-        class3_shuffle = sim[idx].class3_shuffle;
-        class4_shuffle = sim[idx].class4_shuffle;
 
         for (var i = 0; i < class1_selection.length; ++i) {
           shuffle_idx = class1_shuffle[i]-1;
@@ -611,24 +590,12 @@
           shuffle_idx = class2_shuffle[i]-1;
           class2_selection_unshuffled[shuffle_idx] = class2_selection[i]
         };
-        for (var i = 0; i < class3_selection.length; ++i) {
-          shuffle_idx = class3_shuffle[i]-1;
-          class3_selection_unshuffled[shuffle_idx] = class3_selection[i]
-        };
-        for (var i = 0; i < class4_selection.length; ++i) {
-          shuffle_idx = class4_shuffle[i]-1;
-          class4_selection_unshuffled[shuffle_idx] = class4_selection[i]
-        };
 
         console.log("class1_selection: "+class1_selection_unshuffled);
         console.log("class2_selection: "+class2_selection_unshuffled);
-        console.log("class3_selection: "+class3_selection_unshuffled);
-        console.log("class4_selection: "+class4_selection_unshuffled);
 
         results_dict['class1_selection'] = class1_selection_unshuffled;
         results_dict['class2_selection'] = class2_selection_unshuffled;
-        results_dict['class3_selection'] = class3_selection_unshuffled;
-        results_dict['class4_selection'] = class4_selection_unshuffled;
 
         localanswers[idx] = results_dict;
 
@@ -636,8 +603,8 @@
         var correctacclist = [];
         var correcttotal = [];
 
-        if (idx == 3) {
-          for (var i = 0; i < 4; ++i) {
+        if (idx == 9) {
+          for (var i = 0; i < 10; ++i) {
             console.log("localanswers[i].selectedclass "+ localanswers[i].selectedclass)
             console.log("parseInt(sim[idx].ground_truth)" + parseInt(sim[i].ground_truth))
             if (localanswers[i].selectedclass==parseInt(sim[i].ground_truth)) {
@@ -670,13 +637,6 @@
         $('#checkboxes_distinction_class2 input:checked').each(function() {
           $(this).prop( "checked", false );
         });
-        $('#checkboxes_distinction_class3 input:checked').each(function() {
-          $(this).prop( "checked", false );
-        });
-        $('#checkboxes_distinction_class4 input:checked').each(function() {
-          $(this).prop( "checked", false );
-        });
-
 
       };
 
@@ -692,80 +652,80 @@
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[0] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity2_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[1] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity3_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[2] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity4_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[3] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity5_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[4] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity6_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[5] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity7_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[6] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity8_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[7] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity9_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[8] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity10_class1']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class1[9] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
 
@@ -773,259 +733,96 @@
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[0] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity2_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[1] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity3_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[2] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity4_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[3] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity5_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[4] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity6_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[5] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity7_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[6] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity8_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[7] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity9_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[8] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
         $("input[name='similarity10_class2']").change(function(){
           // if the radio button is not checked yet, increment the counter
           checked_radiobtns_class2[9] = 1;
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
 
-
-        $("input[name='similarity1_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[0] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity2_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[1] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity3_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[2] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity4_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[3] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity5_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[4] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity6_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[5] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity7_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[6] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity8_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[7] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity9_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[8] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity10_class3']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class3[9] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-
-
-        $("input[name='similarity1_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[0] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity2_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[1] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity3_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[2] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity4_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[3] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity5_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[4] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity6_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[5] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity7_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[6] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity8_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[7] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity9_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[8] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
-        $("input[name='similarity10_class4']").change(function(){
-          // if the radio button is not checked yet, increment the counter
-          checked_radiobtns_class4[9] = 1;
-          if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
-          };
-        });
 
         $("input[name='sim']").change(function(){
 
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
 
         $("input[name='confidence_task']").change(function(){
           if (radiobtn_check()) {
-            if (idx != 3) {next_btn.disabled = false;}
-            if (idx == 3) {next_task2post.disabled = false;}
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
           };
         });
 
@@ -1042,8 +839,6 @@
 
           class1_shuffle_length = sim[idx].class1_shuffle.length;
           class2_shuffle_length = sim[idx].class2_shuffle.length;
-          class3_shuffle_length = sim[idx].class3_shuffle.length;
-          class4_shuffle_length = sim[idx].class4_shuffle.length;
 
           // Enable the UI if the HIT is not in preview mode.
           if (!simpleamt.isPreview()) {
@@ -1109,8 +904,6 @@
 
           class1_shuffle_length = sim[idx].class1_shuffle.length;
           class2_shuffle_length = sim[idx].class2_shuffle.length;
-          class3_shuffle_length = sim[idx].class3_shuffle.length;
-          class4_shuffle_length = sim[idx].class4_shuffle.length;
 
           // show all the classes first
           for (let i = 1; i < 11; i++) {
@@ -1121,21 +914,11 @@
             id_text = 'row'+i+"_class2";
             document.getElementById(id_text).style.display = 'block';
           }
-          for (let i = 1; i < 11; i++) {
-            id_text = 'row'+i+"_class3";
-            document.getElementById(id_text).style.display = 'block';
-          }
-          for (let i = 1; i < 11; i++) {
-            id_text = 'row'+i+"_class4";
-            document.getElementById(id_text).style.display = 'block';
-          }
 
 
 
           console.log("sim[idx]['class1_shuffle'].length: " + sim[idx]['class1_shuffle'].length)
           console.log("sim[idx]['class2_shuffle'].length: " + sim[idx]['class2_shuffle'].length)
-          console.log("sim[idx]['class3_shuffle'].length: " + sim[idx]['class3_shuffle'].length)
-          console.log("sim[idx]['class4_shuffle'].length: " + sim[idx]['class4_shuffle'].length)
 
           // hide the class 1 prototype checkboxes
           if (sim[idx]['class1_shuffle'].length < 10) {
@@ -1151,21 +934,6 @@
               document.getElementById(id_text).style.display = 'none';
             };
           };
-          // hide the class 3 prototype checkboxes
-          if (sim[idx]['class3_shuffle'].length < 10) {
-            for (let i = sim[idx]['class3_shuffle'].length + 1; i < 11; i++) {
-              id_text = 'row'+i+"_class3";
-              document.getElementById(id_text).style.display = 'none';
-            };
-          };
-
-          // hide the class 4 prototype checkboxes
-          if (sim[idx]['class4_shuffle'].length < 10) {
-            for (let i = sim[idx]['class4_shuffle'].length + 1; i < 11; i++) {
-              id_text = 'row'+i+"_class4";
-              document.getElementById(id_text).style.display = 'none';
-            };
-          };
 
           $('input[name=sim]').attr('checked',false); // does this reset the radio buttons?!
           $('input[name=confidence_task]').attr('checked',false); // does this reset the radio buttons?!
@@ -1173,16 +941,8 @@
           // Check if 2 or 3 is active
 
           tab2class = $('#class2tab').attr('class');
-          tab3class = $('#class3tab').attr('class');
-          tab4class = $('#class4tab').attr('class');
           if (tab2class =='active') {
             $('#class2tab').toggleClass('active');
-          };
-          if (tab3class =='active') {
-            $('#class3tab').toggleClass('active');
-          };
-          if (tab4class =='active') {
-            $('#class4tab').toggleClass('active');
           };
 
           $('#class1tab').addClass("active");
@@ -1193,7 +953,7 @@
 
           // Refresh the counter
           $('.counter-top').text(idx + 1);
-          $('.counter-bottom').text(4);
+          $('.counter-bottom').text(10);
 
           // If the UI is enabled, enable or disable the buttons depending on the index.
           if (enabled) {
@@ -1204,7 +964,7 @@
 
         // Save the input and update the index
         function set_idx(new_idx) {
-          if (new_idx < 0 || new_idx >= 4) return;
+          if (new_idx < 0 || new_idx >= 10) return;
           idx = new_idx;
           render();
         }
