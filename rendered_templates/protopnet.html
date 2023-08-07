@@ -1,0 +1,1737 @@
+<html>
+  <head>
+    <title>Evaluating interpretability</title>
+    <!-- simpleamt depends on these libraries -->
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>
+    <!-- end of required libraries -->
+    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- mozilla pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js"></script>
+    <style>
+      #text-area {
+        margin: 10px 0;
+        font-size: 24pt;
+      }
+      #button-div {
+        margin-bottom: 10px;
+      }
+      #feedback-area {
+        margin: 10px 0;
+        font-size: 24pt;
+      }
+      #counter {
+        margin: 0 10px;
+        font-size: 20pt;
+        font-weight: bold;
+      }
+      #slider-low {
+        width: 100%;
+        margin: 2em auto;
+      }
+      #slider-low label {
+        position: absolute;
+        width: 20px;
+        margin-top: 20px;
+        margin-left: -10px;
+        text-align: center;
+      }
+      #slider-med {
+        width: 100%;
+        margin: 2em auto;
+      }
+      #slider-med label {
+        position: absolute;
+        width: 20px;
+        margin-top: 20px;
+        margin-left: -10px;
+        text-align: center;
+      }
+      #slider-high {
+        width: 100%;
+        margin: 2em auto;
+      }
+      #slider-high label {
+        position: absolute;
+        width: 20px;
+        margin-top: 20px;
+        margin-left: -10px;
+        text-align: center;
+      }
+      p {
+        font-size: 18px;
+      }
+      .btn-group button {
+        background-color: #3e3d3d; /* Green background */
+        border: 1px solid rgb(0, 0, 0); /* Green border */
+        color: white; /* White text */
+        padding: 10px 24px; /* Some padding */
+        cursor: pointer; /* Pointer/hand icon */
+        width: 50%; /* Set a width if needed */
+        display: block; /* Make the buttons appear below each other */
+      }
+      table, th, td {
+        border: none;
+        width=100%;
+        white-space:nowrap;
+        table-layout: auto;
+        padding: 10px;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        padding: 20px;
+      }
+
+      p, ul, ol, dl, table {
+        margin-bottom: 1em;
+        padding: 20px;
+        margin: 0px;
+        padding: 0px;
+        border: 0px;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      .right {
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+      }
+      .left {
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+      }
+      .up {
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+      }
+      .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+      }
+      img {
+        height: auto;
+        width: 100%;
+      }
+      iframe {
+        width: 100%;
+        height: 50%;
+      }
+      hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 0;
+      }
+      li {
+        font-size: 18px;
+      }
+      .row_special {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 10%;
+      }
+
+      .col_special {
+        display: grid;
+        grid-auto-flow: row;
+        align-items: center;
+      }
+      .double {
+        zoom: 1.5;
+        transform: scale(2);
+        -ms-transform: scale(2);
+        -webkit-transform: scale(2);
+        -o-transform: scale(2);
+        -moz-transform: scale(2);
+        transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+        -o-transform-origin: 0 0;
+        -moz-transform-origin: 0 0;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Demographics and background -->
+
+    <!-- Introduction and Consent -->
+<div class='container-fluid' id="part_consent" style="display: block; ">
+  <div class='container-fluid'>
+    <div class='col-xs-10'>
+      <h1>Study introduction</h1>
+      <p>
+        In this study, we aim to evaluate the interpretability of computer vision models.
+        We will provide explanations of how a model makes its prediction
+        and ask you to evaluate how interpretable it is through several questions and tasks.
+        The expected duration of the study is 5-20 minutes.
+      </p>
+      <br>
+      <h1>Consent</h1>
+      <p>
+        Please read the consent form.
+        If you understand and consent to these terms, click "I Accept" to continue.
+      </p>
+    </div>
+  </div>
+  <div class='container-fluid'>
+    <div class='col-xs-10 text-center'>
+      <embed src="" type="application/pdf" width="100%" height="100%">
+      <br>
+      <input type="radio" style="height:24px; width:24px; vertical-align:top;" name="consent"/>
+      <span style="font-size:24px; font-weight:bold">&nbsp; I Accept</span><br>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class='container-fluid'>
+    <button class='btn btn-lg btn-primary' id="next_consent2demographics" disabled onclick="pg_consent2demographics();">Next Page</button>
+  </div>
+  <br>
+  <br>
+</div>
+
+<!-- Demographics -->
+<div class='container-fluid' id="part_demographics" style="display: none; ">
+  <div class='container-fluid'>
+    <h1>Demographics and background</h1>
+    <br>
+    <h3>Q. Demographics (Optional)</h3>
+    <div class='container-fluid'>
+      <div class='row'>
+        <div class='col-xs-4'>
+          <h3>Gender identity</h3>
+          <form action="" method="post">
+            <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="gender" value="Man" /> <span style="font-size:18px">Man</span><br>
+            <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="gender" value="Non-binary" /> <span style="font-size:18px">Non-binary</span><br>
+            <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="gender" value="Woman" /> <span style="font-size:18px">Woman</span><br>
+            <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="gender" value="Self-describe" /> <span style="font-size:18px">Prefer to self-describe below</span><br>
+          </form>
+          <form action="" method="post">
+            <input type="text" id="genderdescribe" name="genderdescribe">
+          </form>
+        </div>
+
+        <div class='col-xs-8'>
+          <h3>Race and ethnicity (select one or more)</h3>
+          <form action="" method="post">
+            <input type="checkbox"  style="height:18px; width:18px; vertical-align:top;" name="race" value="American Indian or Alaska Native" /> <span style="font-size:18px">American Indian or Alaska Native</span><br>
+            <input type="checkbox" style="height:18px; width:18px; vertical-align:top;" name="race" value="Asian" /> <span style="font-size:18px">Asian</span><br>
+            <input type="checkbox" style="height:18px; width:18px; vertical-align:top;" name="race" value="Black or African American" /> <span style="font-size:18px">Black or African American</span><br>
+            <input type="checkbox" style="height:18px; width:18px; vertical-align:top;" name="race" value="Native Hawaiian or Other Pacific Islander" /> <span style="font-size:18px">Native Hawaiian or Other Pacific Islander</span><br>
+            <input type="checkbox" style="height:18px; width:18px; vertical-align:top;" name="race" value="White" /> <span style="font-size:18px">White</span><br>
+            <input type="checkbox" style="height:18px; width:18px; vertical-align:top;" name="race" value="Hispanic or Latino or Spanish Origin of any race" /> <span style="font-size:18px">Hispanic or Latino or Spanish Origin of any race</span><br>
+          </form>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <h3>Q. How much experience do you have with machine learning (ML)?</h3>
+    <form action="" method="post">
+      <input type="radio"  style="height:18px; width:18px; vertical-align:top;" name="ml_exp" value="1" /> <span style="font-size:18px">I don't know anything about ML</span><br>
+      <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="ml_exp" value="2" /> <span style="font-size:18px">I have heard about a few ML concepts or applications</span><br>
+      <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="ml_exp" value="3" /> <span style="font-size:18px">I know the basics of ML and can hold a short conversation about it</span><br>
+      <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="ml_exp" value="4" /> <span style="font-size:18px">I have taken a course on ML and/or have experience working with a ML system</span><br>
+      <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="ml_exp" value="5" /> <span style="font-size:18px">I often use and study ML in my life</span><br>
+    </form>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class='col-xs-12' id='button-div'>
+    <button class='btn btn-lg btn-primary' id="next_demographics2intro" disabled onclick="pg_demographics2intro()">Next Page</button>
+  </div>
+  <br>
+  <br>
+</div>
+
+
+    <!-- Model introduction -->
+    <div class='container-fluid' id="part_intro" style="display: none; ">
+      <div class='container-fluid'>
+        <h1>Model introduction</h1>
+        <p style="font-size:18px">
+          We have a model that recognizes 200 bird species in photos.
+          We have access to its prediction and an explanation for it.
+          <br>
+          <b>Please carefully read this page as the remaining study depends on your understanding of the model.</b>
+        </p>
+        <br>
+        <div class='container-fluid'>
+  <h2>ProtoPNet</h2>
+  <p style="font-size:18px">
+    The ProtoPNet model reasons with <strong>prototypes</strong> which are typical representations of
+    a feature. For example, pink skinny long legs is a prototype for Flamingos.
+    <br>
+    <br>
+    Given a new bird photo, the model predicts the species based on prototypes it has learned from
+    previously seen photos. For each prototype, the model finds a region in the photo that looks the
+    most similar and rates its similarity. The model then predicts the bird species whose prototypes
+    are the most similar to the photo. In the below example, the model predicts <b>Woodpecker</b> out of 200 bird species.
+  </p>
+</div>
+
+<div class='container-fluid'>
+  <div class='col-xs-10'>
+    <img src="https://drive.google.com/uc?export=view&id=1YyQ9JZDpsdkmQrukusr0jrP4kbWSjhDv" width=100%>
+  </div>
+</div>
+        <br>
+        <div class='col-xs-12' id='button-div'>
+          <button class='btn btn-lg btn-primary' id="next_intro2preview" onclick="pg_intro2preview()">Next Page</button>
+        </div>
+        <br>
+      </div>
+    </div>
+
+    <!-- Task preview & Examples -->
+    <div class='container-fluid' id="part_preview" style="display: none; ">
+
+      <div class='container-fluid'>
+        <h1> Task preview  </h1>
+        <p>Here is a preview of task you will complete.</p>
+      </div>
+
+      <br>
+
+      <div class='container-fluid'>
+        <div class='col-xs-8' style="border:1px solid black;">
+          <h1>Predict the bird species</h1>
+          <p>
+            Given a bird photo, the ProtoPNet model predicts the species based on prototypes it has learned from
+            previously seen photos.
+            Specifically for each prototype, the model identifies a region in the
+            photo that looks the most similar to the prototype and rates their similarity.
+          </p>
+          <p>
+            <b>
+              For a given photo, we show explanations of how the model reasons for 2 bird species.
+              For each bird species, rate how similar each prototype is
+              to the photo region.
+              At the end, choose the bird species you think is correct.
+            </b>
+          </p>
+          <br>
+          <br>
+          <h3>
+            Please watch the below video for a quick walkthrough.
+          </h3>
+          <br>
+          <div style="position:relative;padding-top:56.25%;">
+            <iframe src="https://www.youtube.com/embed/yDHcDi7Przg" frameborder="0" allowfullscreen
+              style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+          </div>
+          <br>
+        </div>
+        <br><br>
+      </div>
+
+      <br><br>
+
+      <!-- Example explanations -->
+      <div class='container-fluid'>
+        <h1>Example explanations</h1>
+        <p>
+          Below we show examples of a correct prediction and an incorrect prediction.
+          Please examine them and rate your level of understanding of the model.
+        </p>
+      </div>
+      <div class='container-fluid'>
+        <div class='col-xs-4'>
+          <h3>Correct prediction</h3>
+          <div id='correct1-container'></div>
+        </div>
+        <div class='col-xs-1'></div>
+        <div class='col-xs-4'>
+          <h3>Incorrect prediction</h3>
+          <div id='incorrect-container'></div>
+        </div>
+      </div>
+
+      <br><br><br>
+
+      <!-- Subjective question -->
+      <div class='container-fluid'>
+        <h3>Q. How well do you think you understand the model's reasoning process?</h3>
+        <form action="" method="post">
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective" value="1" /> <span style="font-size:18px">Very Poor</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective" value="2" /> <span style="font-size:18px">Poor</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective" value="3" /> <span style="font-size:18px">Fair</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective" value="4" /> <span style="font-size:18px">Good</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective" value="5" /> <span style="font-size:18px">Very Good</span>
+        </form>
+      </div>
+
+      <br><br><br>
+
+      <div class='col-xs-12' id='button-div'>
+        <button class='btn btn-lg btn-primary' id="next_preview2task" disabled onclick="pg_preview2task()">Next Page</button>
+      </div>
+
+      <br>
+
+    </div>
+
+
+    <!-- Main task -->
+    <html>
+  <head>
+    <title></title>
+    <!-- simpleamt depends on these libraries -->
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js'></script>
+    <!-- end of required libraries -->
+    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      #text-area {
+        margin: 10px 0;
+        font-size: 24pt;
+      }
+      #button-div {
+        margin-bottom: 10px;
+      }
+      #counter {
+        margin: 0 10px;
+        font-size: 20pt;
+        font-weight: bold;
+      }
+      p {
+        font-size: 18px;
+      }
+      hr {
+        display: block;
+        height: 1px;
+        border-top: 1px solid #ccc;
+        margin: 1em 0;
+        padding: 0;
+      }
+      li {
+        font-size: 18px;
+      }
+      .row_special {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 10%;
+      }
+      .col_special {
+        display: grid;
+        grid-auto-flow: row;
+        align-items: center;
+      }
+      .double {
+        zoom: 1.5;
+        transform: scale(2);
+        -ms-transform: scale(2);
+        -webkit-transform: scale(2);
+        -o-transform: scale(2);
+        -moz-transform: scale(2);
+        transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+        -o-transform-origin: 0 0;
+        -moz-transform-origin: 0 0;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class='container-fluid' id='part_task' style="display: none; ">
+
+      <!-- Instructions -->
+      <div class='container-fluid'>
+        <h1>Simulate the model</h1>
+        <p>
+          Given a bird photo, the ProtoPNet model predicts the species based on prototypes it has learned from
+          previously seen photos.
+          Specifically for each prototype, the model identifies a region in the
+          photo that looks the most similar to the prototype and rates their similarity.
+        </p>
+        <p>
+          <b>
+            For a given photo, we show explanations of how the model reasons for 2 bird species.
+            For each bird species, rate how similar each prototype is
+            to the photo region.
+            Note that the (region, prototype) pairs are presented in random order.
+            At the end, choose the bird species you think is correct.
+          </b>
+        </p>
+        <p>
+          Random guessing will get you 50% accuracy.
+          You will receive a reward based on your performance beyond this 50% random chance.
+        </p>
+      </div>
+
+      <hr><br>
+
+      <!-- Photo and explanation -->
+      <div class='container-fluid'>
+        <div class='col-xs-3 text-center'>
+          <div class='col-xs-11 text-center'>
+            <p>Photo</p>
+            <div id='testimage-container'></div>
+          </div>
+          <br><br>
+          <div class='col-xs-11 text-left'>
+            <br>
+            <p>
+              <b>Prototypes and their source photos are from the specified species.</b>
+              <br><br>
+              That is, Species 1 explanation only contains the prototypes and the prototype's photos from Species 1.
+            </div>
+        </div>
+
+        <div class='col-xs-9 text-left'>
+          <h3>Task: Rate the similarity of each prototype-region pair on a scale of 1-4.</h3>
+          <p><b>
+            1: Not Similar<br>
+            2: Somewhat Not Similar<br>
+            3: Somewhat Similar<br>
+            4: Similar
+          </b></p>
+          <br>
+          <p>
+            Click on &#34;Species 1&#34; and &#34;Species 2&#34; to move between species.
+          </p>
+          <p>
+            For your HIT to be approved, you have to rate all prototypes in both species.
+          </p>
+          <br>
+          <div class='row'>
+            <div class='col-xs-12'>
+              <ul class="nav nav-tabs">
+                <li role="presentation" id='class1tab' class="active" onclick="$('#class1').show();$('#class2').hide();$(this).addClass('active'); $(class2tab).removeClass('active');"><a>Species 1</a></li>
+                <li role="presentation" id='class2tab' onclick="$('#class2').show();$('#class1').hide();$(this).addClass('active');$(class1tab).removeClass('active');"><a>Species 2</a></li>
+
+              </ul>
+            </div>
+          </div>
+
+          <br>
+
+          <div class='row'></div>
+
+          <div class='col-xs-9' id='class1'>
+            <div class='container-fluid'>
+                <div class='row_special'>
+
+                  <!-- Column 1 -->
+                  <div class='col_special'>
+                    <div id='c1exp-container'>
+                    </div>
+                  </div>
+
+                  <!-- Column 2 -->
+                  <div id='checkboxes_distinction_class1' class='col_special'>
+                    <div  id="row1_class1" class="double">
+                      <input type="radio" name="similarity1_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity1_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity1_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity1_class1" value="4" style="vertical-align:top">4
+                      <!-- <span style="margin-left:5px; font-size:10px">Row 1</span> -->
+                    </div>
+                    <div id="row2_class1" class="double">
+                     <input type="radio" name="similarity2_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity2_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity2_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity2_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row3_class1" class="double">
+                     <input type="radio" name="similarity3_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity3_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity3_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity3_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row4_class1" class="double">
+                     <input type="radio" name="similarity4_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity4_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity4_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity4_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row5_class1" class="double">
+                     <input type="radio" name="similarity5_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity5_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity5_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity5_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row6_class1" class="double">
+                     <input type="radio" name="similarity6_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity6_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity6_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity6_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row7_class1" class="double">
+                     <input type="radio" name="similarity7_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity7_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity7_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity7_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row8_class1" class="double">
+                     <input type="radio" name="similarity8_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity8_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity8_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity8_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row9_class1" class="double">
+                     <input type="radio" name="similarity9_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity9_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity9_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity9_class1" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row10_class1" class="double">
+                      <input type="radio" name="similarity10_class1" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity10_class1" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity10_class1" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity10_class1" value="4" style="vertical-align:top">4
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div> <!-- End of row selection -->
+
+          <div hidden class='col-xs-9' id='class2'>
+            <div class='container-fluid'>
+                <div class='row_special'>
+
+                  <!-- Column 1 -->
+                  <div class='col_special'>
+                    <div id='c2exp-container'>
+                    </div>
+                  </div>
+
+                  <!-- Column 2 -->
+                  <div id='checkboxes_distinction_class2' class='col_special'>
+                    <div  id="row1_class2" class="double">
+                      <input type="radio" name="similarity1_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity1_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity1_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity1_class2" value="4" style="vertical-align:top">4
+                      <!-- <span style="margin-left:5px; font-size:10px">Row 1</span> -->
+                    </div>
+                    <div id="row2_class2" class="double">
+                     <input type="radio" name="similarity2_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity2_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity2_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity2_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row3_class2" class="double">
+                     <input type="radio" name="similarity3_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity3_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity3_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity3_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row4_class2" class="double">
+                     <input type="radio" name="similarity4_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity4_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity4_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity4_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row5_class2" class="double">
+                     <input type="radio" name="similarity5_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity5_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity5_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity5_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row6_class2" class="double">
+                     <input type="radio" name="similarity6_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity6_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity6_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity6_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row7_class2" class="double">
+                     <input type="radio" name="similarity7_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity7_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity7_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity7_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row8_class2" class="double">
+                     <input type="radio" name="similarity8_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity8_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity8_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity8_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row9_class2" class="double">
+                     <input type="radio" name="similarity9_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity9_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity9_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity9_class2" value="4" style="vertical-align:top">4
+                    </div>
+                    <div id="row10_class2" class="double">
+                      <input type="radio" name="similarity10_class2" value="1" style="vertical-align:top">1
+                      <input type="radio" name="similarity10_class2" value="2" style="vertical-align:top">2
+                      <input type="radio" name="similarity10_class2" value="3" style="vertical-align:top">3
+                      <input type="radio" name="similarity10_class2" value="4" style="vertical-align:top">4
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div> <!-- End of row selection -->
+
+        </div>
+
+      </div>
+
+      <br>
+
+      <!-- Question -->
+      <div class='container-fluid'>
+        <h3>Q. Choose the bird species you think is correct, then click &#34;Next Photo.&#34;</h3>
+        <input type="radio"class="form-check-input"  style="height:18px; width:18px; vertical-align:top;" name="sim" value="1" /> <span style="font-size:18px">Species 1 &nbsp;</span>
+        <input type="radio"class="form-check-input" style="height:18px; width:18px; vertical-align:top;" name="sim" value="2" /> <span style="font-size:18px">Species 2 &nbsp;</span><br>
+
+      </div>
+
+      <br>
+
+      <!-- Confidence Question -->
+      <div class='container-fluid'>
+        <h3>Q. How confident are you in your answer?</h3>
+        <form action="" method="post">
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="confidence_task" value="1"/>
+          <span style="font-size:18px">Not confident at all</span>
+          <br>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="confidence_task" value="2"/>
+          <span style="font-size:18px">Slightly confident</span>
+          <br>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="confidence_task" value="3"/>
+          <span style="font-size:18px">Somewhat confident</span>
+          <br>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="confidence_task" value="4"/>
+          <span style="font-size:18px">Fairly confident</span>
+          <br>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="confidence_task" value="5"/>
+          <span style="font-size:18px">Completely confident</span>
+        </form>
+      </div>
+
+
+      <!-- Next image -->
+      <div class='container-fluid' id='button-div'>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id='counter'><span class='counter-top'></span> / <span class='counter-bottom'></span></span>
+        <br>
+        <button id='next_btn' style='background-color:#FFAC1C; border:none;' class='btn btn-lg btn-primary' onclick="record();" disabled>Next Photo</button>
+        <br>
+        If you can't click  "Next Photo" after rating all prototypes and answering both questions, try clicking on a different answer and then click on your desired answer.
+      </div>
+
+      <br><hr>
+
+      <!--Next page instructions-->
+      <div class='container-fluid'>
+        <h3>Click &#34;Next Page&#34; after selecting answers for all 10 photos.</h3>
+      </div>
+
+      <br>
+
+      <!-- Next page -->
+      <div class='col-xs-12' id='button-div'>
+        <button class='btn btn-lg btn-primary' id='next_task2post' onclick="record(); pg_task2post();">Next Page</button>
+      </div>
+
+      <br><hr>
+
+      <!-- Model description instructions -->
+      <div class='container-fluid'>
+        <h3>Click &#34;Model Description&#34; to open or close model description.</h3>
+      </div>
+
+      <br>
+
+      <!-- Model description button -->
+      <div class='container-fluid' id='button-div'>
+          <button class='btn btn-lg btn-primary' style="background-color:#4CAF50; border:none;" autofocusid='display_method' onclick="pg_method();">Model Description</button>
+      </div>
+
+      <!-- Model description -->
+      <div class='container-fluid' id="part_method" style="display: none; ">
+        <div class='col-xs-8' style="border:1px solid black;">
+          <div class='container-fluid'>
+  <h2>ProtoPNet</h2>
+  <p style="font-size:18px">
+    The ProtoPNet model reasons with <strong>prototypes</strong> which are typical representations of
+    a feature. For example, pink skinny long legs is a prototype for Flamingos.
+    <br>
+    <br>
+    Given a new bird photo, the model predicts the species based on prototypes it has learned from
+    previously seen photos. For each prototype, the model finds a region in the photo that looks the
+    most similar and rates its similarity. The model then predicts the bird species whose prototypes
+    are the most similar to the photo. In the below example, the model predicts <b>Woodpecker</b> out of 200 bird species.
+  </p>
+</div>
+
+<div class='container-fluid'>
+  <div class='col-xs-10'>
+    <img src="https://drive.google.com/uc?export=view&id=1YyQ9JZDpsdkmQrukusr0jrP4kbWSjhDv" width=100%>
+  </div>
+</div>
+          <br><br>
+        </div>
+        <br><br><br>
+      </div>
+
+    </div> <!-- End of part_task -->
+  </body>
+</html>
+
+<script>
+  // $(function() {$("input[name='subjective']").change(function(){next6_to_7.disabled = false;})});
+  function recordtask1sim() {
+    // var class_selection = document.querySelector('input[name = "task1"]:checked').value;
+    $('#task2table').show();
+  };
+  // update the text and background color
+  function updateselection(tr_id) {
+    var currentClass = tr_id.className;
+    // if 'info' (Not selected), change class to 'danger' and text 'Not Similar'
+    if (currentClass == 'info') {
+      counter++;
+      tr_id.className='danger';
+      // set the last child's text equal to 'Not Similar'
+      tr_id.childNodes[3].innerHTML = 'Not Similar';
+    }
+
+    if (currentClass == 'danger') {
+      tr_id.className='warning';
+      // set the last child's text equal to 'Not Similar'
+      tr_id.childNodes[3].innerHTML = 'Somewhat Similar';
+    }
+
+    // if danger, change to succes and 'Obviously Similar')
+    if (currentClass == 'warning') {
+      tr_id.className='success';
+      // set the last child's text equal to 'Not Similar'
+      tr_id.childNodes[3].innerHTML = 'Obviously Similar'
+    }
+
+    // if success, change to info and 'Somewhat Similar'
+    if (currentClass == 'success') {
+      counter--;
+      tr_id.className='info';
+      // set the last child's text equal to 'Not Similar'
+      tr_id.childNodes[3].innerHTML = 'Click on Prototype to indicate selection'
+    }
+  };
+</script>
+
+
+    <!-- Post-task evaluation -->
+    <div class='container-fluid' id='part_post' style="display: none;">
+      <div class='container-fluid'>
+        <h1>Post-task evaluation</h1>
+        <br>
+        <h3>Q. How well do you think you understand the model's reasoning process?</h3>
+        <form action="" method="post">
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective2" value="1" /> <span style="font-size:18px">Very Poor</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective2" value="2" /> <span style="font-size:18px">Poor</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective2" value="3" /> <span style="font-size:18px">Fair</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective2" value="4" /> <span style="font-size:18px">Good</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective2" value="5" /> <span style="font-size:18px">Very Good</span>
+        </form>
+      </div>
+      <br><br><br>
+      <div class='col-xs-12' id='button-div'>
+        <button class='btn btn-lg btn-primary' id="next_post2perf" disabled onclick="pg_post2perf()">Next Page</button>
+      </div>
+    </div>
+
+    <!-- Your performance -->
+    <div class='container-fluid' id='part_perf' style="display: none;">
+      <div class='container-fluid'>
+        <h1>Your performance</h1>
+        <br>
+        <p>
+          You identified correct predictions for
+          <b><span id="correctcount"></span> out of <span id="correcttotal"></span></b>
+          photos in the previous task, achieving <b><span id="correctacc"></span>%</b> accuracy.
+          (Random guessing will result in 50% accuracy.)
+        </p>
+        <br>
+        <h3>Q. How well do you think you understand the model's reasoning process?</h3>
+        <form action="" method="post">
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective3" value="1" /> <span style="font-size:18px">Very Poor</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective3" value="2" /> <span style="font-size:18px">Poor</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective3" value="3" /> <span style="font-size:18px">Fair</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective3" value="4" /> <span style="font-size:18px">Good</span>
+          <input type="radio" style="height:18px; width:18px; vertical-align:top;" name="subjective3" value="5" /> <span style="font-size:18px">Very Good</span>
+        </form>
+      </div>
+      <br><br><br>
+      <div class='col-xs-12' id='button-div'>
+        <button class='btn btn-lg btn-primary' id="next_perf2choice" disabled onclick="pg_perf2choice()">Next Page</button>
+      </div>
+    </div>
+
+    <!-- Choose which model to use -->
+    <div class='container-fluid' id='part_choice' style="display: none;">
+  <div class='container-fluid'>
+    <h1>Choose which model to use</h1>
+    <br>
+    <p>
+      The ProtoPNet model achieves an overall accuracy of <b><span id="origacc"></span>%</b> in 200 bird species classification.</p>
+    <p>
+      You identified correct predictions for <b><span id="correctcount2"></span>
+      out of <span id="correcttotal2"></span></b> photos in the previous task,
+      achieving <b><span id="correctacc2"></span>%</b> accuracy.
+      (Random guessing will result in 25% accuracy.)
+    </p>
+    <p>Alternatively, you can use a <b>Black-box</b> model that doesn&#39;t come with an explanation of its prediction.</p>
+    <br>
+    <br>
+    <h3>Q. What is the minimum accuracy of the Black-box model that would convince you to use the Black-box model over the ProtoPNet model?</h3>
+  </div>
+
+  <br>
+
+  <div class='container-fluid'>
+    <p>
+      <b>[Low-risk setting] Scientific or educational purposes.</b>
+      E.g. You have a stack of bird images and want to know their species in a lab and/or a classroom.
+    </p>
+    Recall that the ProtoPNet model achieves <span id="origacc_copy1"></span>% accuracy.
+    <br>
+    <div class='col-xs-10'>
+      <div id="slider-low"></div>
+      <br>
+      <p>Selected Black-box model accuracy: <b><span id="low_risk"></span>%</b></p>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+
+  <div class='container-fluid'>
+    <p>
+      <b>[Medium-risk setting] Biodiversity and ecosystem monitoring.</b>
+      E.g. You want to collect large amounts of bird images and automatically label them.
+    </p>
+    Recall that the ProtoPNet model achieves <span id="origacc_copy2"></span>% accuracy.
+    <br>
+    <div class='col-xs-10'>
+      <div id="slider-med"></div>
+      <br>
+      <p>Selected Black-box model accuracy: <b><span id="med_risk"></span>%</b></p>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+
+  <div class='container-fluid'>
+    <p>
+      <b>[High-risk setting] Veterinary science or medical diagnosis.</b>
+      E.g. You have a sick bird and want to identify its species so that it can receive proper treatment and diagnosis.
+    </p>
+    Recall that the ProtoPNet model achieves <span id="origacc_copy3"></span>% accuracy.
+    <br>
+    <div class='col-xs-10'>
+      <div id="slider-high"></div>
+      <br>
+      <p>Selected Black-box model accuracy: <b><span id="high_risk"></span>%</b></p>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <div class='container-fluid'>
+    <div class='row'>
+      <div class='col-xs-12'>
+        <h3>Briefly describe the reason for your choices.</h3>
+        <textarea id='text-area' name='text-area' class='form-control tb-margin'></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class='container-fluid' id='button-div'>
+    <button class='btn btn-lg btn-primary' id="next_choice2feedback" onclick="pg_choice2feedback()">Next Page</button>
+  </div>
+
+</div>
+
+    <!-- Feedback -->
+    <div class='container-fluid' id='part_feedback' style="display: none;">
+      <div class='col-xs-12'>
+        <h3>
+          Thank you for your participation!
+          <br><br>
+          Let us know if you have any feedback about this study.
+        </h3>
+        <textarea id='feedback-area' name='feedback-area' class='form-control tb-margin'></textarea>
+      </div>
+      <script type='text/json' id='input'>
+  
+</script>
+<form id='results-form' class='text-center'>
+  <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
+  <input type='hidden' value='' name='output' id='output'/>
+  <input type='submit' class='btn btn-lg btn-success' id='submit-btn' value='Submit' disabled/>          
+</form>
+<script>
+  var simpleamt = (function() {
+    
+    // Copied from http://james.padolsey.com/javascript/bujs-1-getparameterbyname/
+    function getUrlParam(name) {
+      var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+      return match ? decodeURIComponent(match[1].replace(/\+/g, ' ')) : null;
+    }
+
+    function getInput(default_input) {
+      if (typeof(default_input) === 'undefined') default_input = null;
+      try {
+        return JSON.parse($('#input').html());
+      } catch (e) {
+        return default_input;
+      }
+    }
+
+    function setOutput(output) {
+      $('#output').val(JSON.stringify(output));
+    }
+
+    function isPreview() {
+      var assignment_id = getUrlParam('assignmentId');
+      if (assignment_id === null) return false;
+      return assignment_id == 'ASSIGNMENT_ID_NOT_AVAILABLE';
+    }
+
+    function setupSubmit() {
+      var submit_to = getUrlParam('turkSubmitTo');
+      $('#results-form').attr('action', submit_to + '/mturk/externalSubmit');                      
+      $('#assignmentId').val(getUrlParam('assignmentId'));
+    }
+
+    return {
+      getInput: getInput,
+      setOutput: setOutput,
+      isPreview: isPreview,
+      setupSubmit: setupSubmit,
+    }
+
+  })();
+</script>
+    </div>
+
+    <!-- For slider -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+    <script>
+
+      $( function() {
+        // Low-risk
+        $( "#slider-low" ).slider({
+            value: 80, min: 70, max: 100, step: 1,
+            slide: function (e, ui) {
+                document.getElementById("low_risk").innerHTML = $('#slider-low').slider("option", "value");
+            },
+            stop: function (e, ui) {
+                document.getElementById("low_risk").innerHTML = $('#slider-low').slider("option", "value");
+            }
+        })
+        .each(function() {
+          var opt = $('#slider-low').data().uiSlider.options;
+          var vals = opt.max - opt.min;
+          for (var i = 0; i <= vals; i++) {
+            var el = $('<label>'+(opt.min+i)+'</label>').css('left',(i/vals*100)+'%');
+            $("#slider-low").append(el);
+          }
+        });
+        document.getElementById("low_risk").innerHTML = $('#slider-low').slider("option", "value");
+
+        // Med-risk
+        $( "#slider-med" ).slider({
+            value: 80, min: 70, max: 100, step: 1,
+            slide: function (e, ui) {
+                document.getElementById("med_risk").innerHTML = $('#slider-med').slider("option", "value");
+            },
+            stop: function (e, ui) {
+                document.getElementById("med_risk").innerHTML = $('#slider-med').slider("option", "value");
+            }
+        })
+        .each(function() {
+          var opt = $('#slider-med').data().uiSlider.options;
+          var vals = opt.max - opt.min;
+          for (var i = 0; i <= vals; i++) {
+            var el = $('<label>'+(opt.min+i)+'</label>').css('left',(i/vals*100)+'%');
+            $("#slider-med").append(el);
+          }
+        });
+        document.getElementById("med_risk").innerHTML = $('#slider-med').slider("option", "value");
+
+        // High-risk
+        $( "#slider-high" ).slider({
+            value: 80, min: 70, max: 100, step: 1,
+            slide: function (e, ui) {
+                document.getElementById("high_risk").innerHTML = $('#slider-high').slider("option", "value");
+            },
+            stop: function (e, ui) {
+                document.getElementById("high_risk").innerHTML = $('#slider-high').slider("option", "value");
+            }
+        })
+        .each(function() {
+          var opt = $('#slider-high').data().uiSlider.options;
+          var vals = opt.max - opt.min;
+          for (var i = 0; i <= vals; i++) {
+            var el = $('<label>'+(opt.min+i)+'</label>').css('left',(i/vals*100)+'%');
+            $("#slider-high").append(el);
+          }
+        });
+        document.getElementById("high_risk").innerHTML = $('#slider-high').slider("option", "value");
+      });
+
+      function movepage(div_prev, div_next) {
+        if (div_prev.style.display !== 'none') {
+          div_prev.style.display = 'none';
+          div_next.style.display = 'block';
+        }
+        else {
+          div_prev.style.display = 'block';
+          div_next.style.display = 'none';
+        }
+        // Jump to the top of the page
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+      };
+
+      // Create timing object
+      timing = {};
+      timing['start'] = Date.now();
+      timing['pg_method'] = [];
+      timing['nextphoto'] = [];
+
+      // Move between pages
+      function pg_consent2demographics() {
+        timing['pg_consent2demographics'] = Date.now();
+        var div_prev = document.getElementById('part_consent');
+        var div_next = document.getElementById('part_demographics');
+        movepage(div_prev, div_next);
+      }
+      function pg_demographics2intro() {
+        timing['pg_demographics2intro'] = Date.now();
+        var div_prev = document.getElementById('part_demographics');
+        var div_next = document.getElementById('part_intro');
+        movepage(div_prev, div_next);
+      }
+
+      function pg_intro2preview() {
+        timing['pg_intro2preview'] = Date.now();
+        var div_prev = document.getElementById('part_intro');
+        var div_next = document.getElementById('part_preview');
+        movepage(div_prev, div_next);
+      }
+      function pg_preview2task() {
+        timing['pg_preview2task'] = Date.now();
+        var div_prev = document.getElementById('part_preview');
+        var div_next = document.getElementById('part_task');
+        movepage(div_prev, div_next);
+      }
+      function pg_task2post() {
+        timing['pg_task2post'] = Date.now();
+        var div_prev = document.getElementById('part_task');
+        var div_next = document.getElementById('part_post');
+        movepage(div_prev, div_next);
+      }
+      function pg_post2perf() {
+        timing['pg_post2perf'] = Date.now();
+        var div_prev = document.getElementById('part_post');
+        var div_next = document.getElementById('part_perf');
+        movepage(div_prev, div_next);
+      }
+      function pg_perf2choice() {
+        timing['pg_perf2choice'] = Date.now();
+        var div_prev = document.getElementById('part_perf');
+        var div_next = document.getElementById('part_choice');
+        movepage(div_prev, div_next);
+      }
+      function pg_choice2feedback() {
+        timing['pg_choice2feedback'] = Date.now();
+        var div_prev = document.getElementById('part_choice');
+        var div_next = document.getElementById('part_feedback');
+        movepage(div_prev, div_next);
+      }
+      function pg_method() {
+        timing['pg_method'][timing['pg_method'].length] = Date.now();
+        var div_method = document.getElementById('part_method');
+        if (div_method.style.display == 'none') {
+          div_method.style.display = 'block';
+        }
+        else {
+          div_method.style.display = 'none';
+        }
+      }
+
+      function add(accumulator, a) {
+        return accumulator + a;
+      }
+
+      var DEFAULT_INPUT = {'ID': 0, 'correct1': ['https://drive.google.com/uc?export=view&id=1558vcRsHE2srErdNQUSezncHUAR2juIS'], 'correct2': ['https://drive.google.com/uc?export=view&id=1558vcRsHE2srErdNQUSezncHUAR2juIS'], 'incorrect': ['https://drive.google.com/uc?export=view&id=14dYRXv5n11YrYj6-PDX6vvwG93AdI092'], 'sim': [{'testimg': 'https://drive.google.com/uc?export=view&id=1DDbnSoYNW3CDt_pr7P9usc9qkNDMUG5S', 'top2': 'https://drive.google.com/uc?export=view&id=1SlAAe8RiffCfrkmO26p5VKoL4fujVIrf', 'top1': 'https://drive.google.com/uc?export=view&id=11hkiQEEOuckD6kSfHBLHC_FkMVQCIH73', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1JFH6JeIHpFPPAuVtisPLnLQZVwcZgjCZ', 'top2': 'https://drive.google.com/uc?export=view&id=175PqOL9wmEtxd5QdOKEsVPkvmBDodpyu', 'top1': 'https://drive.google.com/uc?export=view&id=1EtMKH66Qoe_cFUy1RORurKbYDnPjQ60Z', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1pG68EKKMtA-Fr47ak2bkaJPrEZi_VD6S', 'top1': 'https://drive.google.com/uc?export=view&id=1B0hCuQeqrK-UTzg62erBLao2sq7nlDn4', 'top2': 'https://drive.google.com/uc?export=view&id=1rk_AcLbllTPVbsk4piG_-MOzSrPhyvXB', 'top3': '', 'top4': '', 'ground_truth': 1, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1ngniCmZI7HLcTrpPlm5SKmSjuTvB9MS6', 'top2': 'https://drive.google.com/uc?export=view&id=1xOlF_lRRcgbyhO4W9pF9BS_4vUnAAUF1', 'top1': 'https://drive.google.com/uc?export=view&id=1HXKODecRmysl2cafg9l_C-rypzywZGAP', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=14wCDQ3DEwmXGlobLwRShXDiFDKwMvf_B', 'top2': 'https://drive.google.com/uc?export=view&id=1q1r_gZ9J7B2X5fzGsKSrGcTzXxjXY1EX', 'top1': 'https://drive.google.com/uc?export=view&id=15dx_DZhVkomKAoLEegsF4BNZsOUo4Ep1', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1Y3mvgh8HCRDIQbCCV2ceDcQXFT2OLzim', 'top2': 'https://drive.google.com/uc?export=view&id=1vOZNqszAHW4zAKN2caPdZuGOHpZLAALx', 'top1': 'https://drive.google.com/uc?export=view&id=1mLhM06L99f6Vr6Le8TwQk8dof4RaaISP', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1eoIZjwg0jYnU10M00qa85ncq-h-X3w_1', 'top2': 'https://drive.google.com/uc?export=view&id=1Y18ZVUTPAVD7le9wM5V1oc_DA7QbJpi9', 'top1': 'https://drive.google.com/uc?export=view&id=1AAnQb_5clPJbGp0BSarBM7mCr-H-_gMb', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1ihekiHuLXX00cyO5ARm1vktU9V2cgBnh', 'top2': 'https://drive.google.com/uc?export=view&id=17UOoVMR_7LqbAGI4IWJ4fxrsCk4D3EFC', 'top1': 'https://drive.google.com/uc?export=view&id=1bX3t1KD8eqWHuFWdQ0niqnLlYwVTQZw-', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1zhVUiVvtx2WZnacZGs0tq1YbycKz7Xb0', 'top2': 'https://drive.google.com/uc?export=view&id=1WpoQeH3GV5WiqV5-JM5PFBli6IsnxQMQ', 'top1': 'https://drive.google.com/uc?export=view&id=1lbJllZ1iU9Y4Orv12n7cGXnvS0r3S9xs', 'top3': '', 'top4': '', 'ground_truth': 2, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}, {'testimg': 'https://drive.google.com/uc?export=view&id=1IbkPRyTAsHNYwxcf_B1xknOnjccFftUR', 'top1': 'https://drive.google.com/uc?export=view&id=19aHM23jkKPVIaTiow6IGG_-uXIwwDwfk', 'top2': 'https://drive.google.com/uc?export=view&id=1wlqGdZP_QD-Z0E2YH7W9LONa3R9WyJiY', 'top3': '', 'top4': '', 'ground_truth': 1, 'class1_shuffle': [1, 2, 3], 'class2_shuffle': [1, 2, 3], 'class3_shuffle': [], 'class4_shuffle': []}]}
+
+
+      var answers = [];
+      var descriptions = [];
+      var feedback = [];
+
+      // Some variables to track state of the HIT.
+      var enabled = false;
+      var longinput = null;
+
+      var localanswers = [];
+      var idx = 0;
+
+      var checked_radiobtns_class1 = new Array(10).fill(0);;
+      var checked_radiobtns_class2 = new Array(10).fill(0);;
+
+      var class1_shuffle_length;
+      var class2_shuffle_length;
+
+
+      var origacc = 79.9;
+      document.getElementById("origacc").innerHTML = origacc;
+      document.getElementById("origacc_copy1").innerHTML = origacc;
+      document.getElementById("origacc_copy2").innerHTML = origacc;
+      document.getElementById("origacc_copy3").innerHTML = origacc;
+
+      function radiobtn_check() {
+        console.log("class1_shuffle_length: "+ class1_shuffle_length)
+        console.log("class2_shuffle_length: "+ class2_shuffle_length)
+
+        console.log("checked_radiobtns_class1: "+checked_radiobtns_class1)
+        console.log("checked_radiobtns_class2: "+checked_radiobtns_class2)
+        return (($("input[name='sim']").is(":checked")) && $("input[name='confidence_task']").is(":checked")  && (checked_radiobtns_class1.reduce(add, 0)==class1_shuffle_length)&&(checked_radiobtns_class2.reduce(add, 0)==class2_shuffle_length))
+      }
+
+      function record() {
+        checked_radiobtns_class1 = new Array(10).fill(0);;
+        checked_radiobtns_class2 = new Array(10).fill(0);;
+
+        timing['nextphoto'][idx] = Date.now();
+
+        results_dict = {};
+        results_dict['selectedclass'] = $('input[name=sim]:checked').val();
+        results_dict['selectedclass_confidence'] = $('input[name=confidence_task]:checked').val();
+
+        $('#class1').show();
+        $('#class2').hide();
+        $('#class1tab').addClass('active');
+        $('#class2tab').removeClass('active');
+        $('input[name=sim]').attr('checked',false); // does this reset the radio buttons?!
+
+        // store the checked items
+        class1_selection = []
+        class2_selection = []
+
+        $('#checkboxes_distinction_class1 input:checked').each(function() {
+          class1_selection.push($(this).attr('value'));
+        });
+
+        $('#checkboxes_distinction_class2 input:checked').each(function() {
+          class2_selection.push($(this).attr('value'));
+        });
+
+        console.log("class1_selection: "+class1_selection);
+        console.log("class2_selection: "+class2_selection);
+
+        // UNSHUFFLE THE PROTOTYPES
+        class1_selection_unshuffled = JSON.parse(JSON.stringify(class1_selection));
+        class2_selection_unshuffled = JSON.parse(JSON.stringify(class2_selection));
+
+        class1_shuffle = sim[idx].class1_shuffle;
+        class2_shuffle = sim[idx].class2_shuffle;
+
+        for (var i = 0; i < class1_selection.length; ++i) {
+          shuffle_idx = class1_shuffle[i]-1;
+          class1_selection_unshuffled[shuffle_idx] = class1_selection[i]
+        };
+        for (var i = 0; i < class2_selection.length; ++i) {
+          shuffle_idx = class2_shuffle[i]-1;
+          class2_selection_unshuffled[shuffle_idx] = class2_selection[i]
+        };
+
+        console.log("class1_selection: "+class1_selection_unshuffled);
+        console.log("class2_selection: "+class2_selection_unshuffled);
+
+        results_dict['class1_selection'] = class1_selection_unshuffled;
+        results_dict['class2_selection'] = class2_selection_unshuffled;
+
+        localanswers[idx] = results_dict;
+
+        // Calculate accuracy
+        var correctacclist = [];
+        var correcttotal = [];
+
+        if (idx == 9) {
+          for (var i = 0; i < 10; ++i) {
+            console.log("localanswers[i].selectedclass "+ localanswers[i].selectedclass)
+            console.log("parseInt(sim[idx].ground_truth)" + parseInt(sim[i].ground_truth))
+            if (localanswers[i].selectedclass==parseInt(sim[i].ground_truth)) {
+              correctacclist[i] = 1;
+            } else {
+              correctacclist[i] = 0;
+            }
+            correcttotal[i] = 1;
+          };
+        }
+
+        var correctcount = correctacclist.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+        var correcttotal = correcttotal.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+        var correctacc = correctcount / correcttotal;
+
+        document.getElementById("correctcount").innerHTML = correctcount;
+        document.getElementById("correcttotal").innerHTML = correcttotal;
+        document.getElementById("correctacc").innerHTML = parseFloat(correctacc*100).toFixed(1);
+        document.getElementById("correctcount2").innerHTML = correctcount;
+        document.getElementById("correcttotal2").innerHTML = correcttotal;
+        document.getElementById("correctacc2").innerHTML = parseFloat(correctacc*100).toFixed(1);
+
+
+        // reset the checked prototypes
+        $('input[name=sim]').attr('checked',false); 
+
+        $('#checkboxes_distinction_class1 input:checked').each(function() {
+          $(this).prop( "checked", false );
+        });
+        $('#checkboxes_distinction_class2 input:checked').each(function() {
+          $(this).prop( "checked", false );
+        });
+
+      };
+
+
+      $(function() {
+        $("input[name='consent']").change(function(){next_consent2demographics.disabled = false;});
+        $("input[name='ml_exp']").change(function(){next_demographics2intro.disabled = false;});
+        $("input[name='subjective']").change(function(){next_preview2task.disabled = false;});
+        $("input[name='subjective2']").change(function(){next_post2perf.disabled = false;});
+        $("input[name='subjective3']").change(function(){next_perf2choice.disabled = false;});
+
+        $("input[name='similarity1_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[0] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity2_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[1] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity3_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[2] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity4_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[3] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity5_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[4] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity6_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[5] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity7_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[6] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity8_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[7] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity9_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[8] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity10_class1']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class1[9] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+
+        $("input[name='similarity1_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[0] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity2_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[1] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity3_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[2] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity4_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[3] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity5_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[4] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity6_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[5] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity7_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[6] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity8_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[7] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity9_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[8] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+        $("input[name='similarity10_class2']").change(function(){
+          // if the radio button is not checked yet, increment the counter
+          checked_radiobtns_class2[9] = 1;
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+
+
+        $("input[name='sim']").change(function(){
+
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+
+        $("input[name='confidence_task']").change(function(){
+          if (radiobtn_check()) {
+            if (idx != 9) {next_btn.disabled = false;}
+            if (idx == 9) {next_task2post.disabled = false;}
+          };
+        });
+
+        
+        function main() {
+          // If this is a HIT on AMT, then replace the default input with the real input.
+          longinput = simpleamt.getInput(DEFAULT_INPUT);
+
+          correct1 = longinput['correct1']
+          correct2 = longinput['correct2']
+          incorrect = longinput['incorrect']
+          input_explanation = longinput['input_explanation']
+          sim = longinput['sim']
+
+          class1_shuffle_length = sim[idx].class1_shuffle.length;
+          class2_shuffle_length = sim[idx].class2_shuffle.length;
+
+          // Enable the UI if the HIT is not in preview mode.
+          if (!simpleamt.isPreview()) {
+            enable_hit();
+          }
+
+          // Set up the descriptions.
+          _.each(input, function() { descriptions.push(''); });
+          _.each(input, function() { feedback.push(''); });
+
+          // Preload all images
+          _.each(correct1, function(img_url) {
+            var img = new Image();
+            img.onload = function() { console.log('loaded image from ' + img_url); };
+            img.src = img_url;
+          });
+          _.each(correct2, function(img_url) {
+            var img = new Image();
+            img.onload = function() { console.log('loaded image from ' + img_url); };
+            img.src = img_url;
+          });
+          _.each(incorrect, function(img_url) {
+            var img = new Image();
+            img.onload = function() { console.log('loaded image from ' + img_url); };
+            img.src = img_url;
+          });
+
+          render();
+        };
+
+        // Use the current index to update the image and description
+        function render() {
+          // Jump to the top of the page
+          window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
+
+          // 1_intro: 2 correct, 1 incorrect
+          $('#correct1-container').empty();
+          $('<img>').attr({'src':correct1[0], 'width':'100%'}).appendTo($('#correct1-container'));
+          $('#correct2-container').empty();
+          $('<img>').attr({'src':correct2[0], 'width':'100%'}).appendTo($('#correct2-container'));
+          $('#incorrect-container').empty();
+          $('<img>').attr({'src':incorrect[0], 'width':'100%'}).appendTo($('#incorrect-container'));
+
+          // test photo
+          $('#testimage-container').empty();
+          $('<img>').attr({
+            'src':sim[idx]['testimg'], 'width':'100%', 'align':'center'
+          }).appendTo($('#testimage-container'));
+
+          // set up 3 class explanations
+          $('#c1exp-container').empty();
+          $('<img>').attr({'src':sim[idx]['top1'], 'width':'100%'}).appendTo($('#c1exp-container'));
+          $('#c2exp-container').empty();
+          $('<img>').attr({'src':sim[idx]['top2'], 'width':'100%'}).appendTo($('#c2exp-container'));
+          $('#c3exp-container').empty();
+          $('<img>').attr({'src':sim[idx]['top3'], 'width':'100%'}).appendTo($('#c3exp-container'));
+          $('#c4exp-container').empty();
+          $('<img>').attr({'src':sim[idx]['top4'], 'width':'100%'}).appendTo($('#c4exp-container'));
+
+          class1_shuffle_length = sim[idx].class1_shuffle.length;
+          class2_shuffle_length = sim[idx].class2_shuffle.length;
+
+          // show all the classes first
+          for (let i = 1; i < 11; i++) {
+            id_text = 'row'+i+"_class1";
+            document.getElementById(id_text).style.display = 'block';
+          }
+          for (let i = 1; i < 11; i++) {
+            id_text = 'row'+i+"_class2";
+            document.getElementById(id_text).style.display = 'block';
+          }
+
+
+
+          console.log("sim[idx]['class1_shuffle'].length: " + sim[idx]['class1_shuffle'].length)
+          console.log("sim[idx]['class2_shuffle'].length: " + sim[idx]['class2_shuffle'].length)
+
+          // hide the class 1 prototype checkboxes
+          if (sim[idx]['class1_shuffle'].length < 10) {
+            for (let i = sim[idx]['class1_shuffle'].length + 1; i < 11; i++) {
+              id_text = 'row'+i+"_class1";
+              document.getElementById(id_text).style.display = 'none';
+            };
+          };
+          // hide the class 2 prototype checkboxes
+          if (sim[idx]['class2_shuffle'].length < 10) {
+            for (let i = sim[idx]['class2_shuffle'].length + 1; i < 11; i++) {
+              id_text = 'row'+i+"_class2";
+              document.getElementById(id_text).style.display = 'none';
+            };
+          };
+
+          $('input[name=sim]').attr('checked',false); // does this reset the radio buttons?!
+          $('input[name=confidence_task]').attr('checked',false); // does this reset the radio buttons?!
+          // set Class1 tab to active
+          // Check if 2 or 3 is active
+
+          tab2class = $('#class2tab').attr('class');
+          if (tab2class =='active') {
+            $('#class2tab').toggleClass('active');
+          };
+
+          $('#class1tab').addClass("active");
+
+          // 3_choose: Set up the text area
+          $('#text-area').val(descriptions);
+          $('#feedback-area').val(feedback);
+
+          // Refresh the counter
+          $('.counter-top').text(idx + 1);
+          $('.counter-bottom').text(10);
+
+          // If the UI is enabled, enable or disable the buttons depending on the index.
+          if (enabled) {
+            var next_task2post_btn = $('#next_task2post');
+            next_task2post_btn.prop('disabled', true);
+          };
+        };
+
+        // Save the input and update the index
+        function set_idx(new_idx) {
+          if (new_idx < 0 || new_idx >= 10) return;
+          idx = new_idx;
+          render();
+        }
+
+        // Enable the UI.
+        function enable_hit() {
+          enabled = true;
+
+
+          // Enable components
+          $('#next_btn').click(function() {
+            $('input[name=sim]').prop('checked',false);
+            $('input[name=confidence_task]').prop('checked',false);
+            next_btn.disabled = true;
+            set_idx(idx + 1);
+          });
+
+          $('#text-area').prop('disabled', false);
+          $('#feedback-area').prop('disabled', false);
+          $('#submit-btn').prop('disabled', false);
+
+          // Set up submit handler.
+          simpleamt.setupSubmit();
+          $('#submit-btn').click(function() {
+
+            timing['submit'] = Date.now();
+
+            // Choice answers
+            ml_exp = $('input[name=ml_exp]:checked').val();
+            subjective = $('input[name=subjective]:checked').val();
+            subjective2 = $('input[name=subjective2]:checked').val();
+            subjective3 = $('input[name=subjective3]:checked').val();
+
+
+            // distinguish
+            correctcount = document.getElementById("correctcount").innerHTML;
+            // sliders
+            low_risk = [];
+            med_risk = [];
+            high_risk = [];
+            low_risk.push(document.getElementById("low_risk").innerHTML);
+            med_risk.push(document.getElementById("med_risk").innerHTML);
+            high_risk.push(document.getElementById("high_risk").innerHTML);
+
+            gender = [];
+            race = [];
+
+            if ($('input[name=gender]:checked').length > 0) {
+              gender.push($('input[name=gender]:checked').val());
+            }
+            else {
+              gender.push("");
+            };
+            if ($('input[name=race]:checked').length > 0) {
+              race.push($('input[name=race]:checked').val());
+            }
+            else {race.push("");};
+
+            if (gender.length === 0) {gender = [''];};
+            if (race.length === 0) {[''];};
+
+            gender_written = []
+            gender_written.push($('#genderdescribe').val());
+
+            // Descriptions of reasons
+            descriptions = []
+            descriptions.push($('#text-area').val());
+            feedback = []
+            feedback.push($('#feedback-area').val());
+
+            // Return output
+            var output = _.map(_.zip(ml_exp,
+              subjective, subjective2, subjective3,
+              correctcount,
+              low_risk, med_risk, high_risk,
+              descriptions, gender, race, feedback, gender_written
+              ), function(x) {
+              return {'ml_exp': x[0],
+              'subjective': x[1], 'subjective2': x[2], 'subjective3': x[3],
+              'correctcount': x[4],
+              'low_risk': x[5], 'med_risk':x[6], 'high_risk':x[7],
+              'descriptions': x[8],
+              'gender': x[9], 'race': x[10], 'feedback': x[11], 'gender_written': x[12]
+            };
+            });
+            output.push({"input_ID": longinput['ID']});
+            output.push({"individual_answers": localanswers});
+            output.push({"timing": timing});
+            simpleamt.setOutput(output);
+          });
+        };
+        main();
+      });
+    </script>
+  </body>
+</html>
